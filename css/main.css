@@ -1,0 +1,12 @@
+body {
+    margin: 0;
+}
+
+#scroller {
+    display: block;
+}
+
+#scroll-container {
+    margin-left: 10vw;
+    margin-top: 5vh;
+}
