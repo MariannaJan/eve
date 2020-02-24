@@ -2,14 +2,30 @@ const KEY_CODES = {
     space: 32,
 }
 
-const scroller = document.getElementById('scroller');
-const evePath = 'eve.png';
+const scrollerCanv = document.getElementById('scroller');
 
-let _x = window.innerWidth * 0.8;
-let _y = window.innerHeight / 2;
+//assets paths
+const evePath = 'eve.png';
+const farBgPath = 'bg-far.png';
+const midBgPath = 'bg-mid.png';
+
+const defaultWidth = 512;
+const defaultHeight = 384;
+
+let _y = defaultHeight;
+let _x = defaultWidth;
+
+setCanvasWidth();
+
+function setCanvasWidth() {
+    if (window.innerWidth * 0.5 < defaultWidth) {
+        _x = window.innerWidth * 0.5;
+    }
+}
+
 
 const renderer = new PIXI.Renderer({
-    view: scroller,
+    view: scrollerCanv,
     width: _x,
     height: _y,
     resolution: window.devicePixelRatio,
@@ -22,14 +38,11 @@ window.addEventListener('keydown', keysDown);
 window.addEventListener('keyup', keysUp);
 
 function resize() {
-    console.log('resizing');
-    _x = window.innerWidth * 0.8;
-    _y = window.innerHeight / 2;
-
+    setCanvasWidth();
     renderer.resize(_x, _y);
 }
 
-activeKeys = [];
+let activeKeys = [];
 
 function keysDown(e) {
     activeKeys[e.keyCode] = true;
@@ -41,9 +54,13 @@ function keysUp(e) {
 
 const stage = new PIXI.Container();
 
+const speed = 5;
+
+// Eve initial setup
 let eve;
 const startEveX = 50;
 const startEveY = _y - 50;
+
 
 const ticker = new PIXI.Ticker();
 
@@ -52,20 +69,26 @@ let loader = PIXI.Loader.shared;
 loader.baseUrl = '../assets/images';
 
 loader.add('eve', evePath)
+    .add('bgFar', farBgPath)
+    .add('bgMid', midBgPath)
     .on('progress', handleLoadProgress)
     .on('load', handleLoadAsset)
     .on('error', handleLoadError)
     .load(handleLoadComplete);
 
+let scroller;
+
 function handleLoadComplete() {
-    eve = new PIXI.Sprite(loader.resources.eve.texture)
-    eve.anchor.set(0.5);
-    eve.x = startEveX;
-    eve.y = startEveY;
-    stage.addChild(eve);
+
+    scroller = new Scroller(stage, loader.resources);
+
+    // Eve
+    eve = new Player(stage, loader.resources);
+
+    // Render stage
     renderer.render(stage);
 
-    //start gameLoop
+    // Start gameLoop
     ticker.add(gameLoop);
     ticker.start();
 }
@@ -82,10 +105,14 @@ function handleLoadError() {
     console.error('loading error');
 }
 
-let velocity = 5;
+let velocity = speed;
 let isJumping = false;
 
 function gameLoop() {
+
+    scroller.moveViewPortXBy(speed);
+    renderer.render(stage);
+
     if (!isJumping) {
         if (activeKeys[32]) {
             isJumping = true;
