@@ -1,4 +1,4 @@
-function Player(stage, resources) {
+function Player(stage, resources, startEveX, startEveY) {
 
     PIXI.Sprite.call(this, resources.eve.texture);
 

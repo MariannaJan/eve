@@ -4,7 +4,7 @@
     <link rel="stylesheet" href="./css/main.css">
 </head>
 
-<body>
+<body onload="init();">
     <div id="scroll-container">
         <canvas id="scroller"></canvas>
     </div>
@@ -13,7 +13,13 @@
     <script src="./javascript/MidBg.js"></script>
     <script src="./javascript/Player.js"></script>
     <script src="./javascript/Scroller.js"></script>
-    <script src="./javascript/main.js"></script>
+    <script src="./javascript/Main.js"></script>
+
+    <script>
+        function init() {
+            main = new Main();
+        }
+    </script>
 </body>
 
 </html>

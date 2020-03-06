@@ -1,139 +1,140 @@
-const KEY_CODES = {
-    space: 32,
+function Main() {
+
+    //assets paths
+    this.evePath = 'eve.png';
+    this.farBgPath = 'bg-far.png';
+    this.midBgPath = 'bg-mid.png';
+
+    this.defaultWidth = 512;
+    this.defaultHeight = 384;
+
+    this._y = this.defaultHeight;
+    this._x = this.defaultWidth;
+
+    this.stage = new PIXI.Container();
+
+    this.speed = 5;
+    this.startEveX = 50;
+    this.startEveY = this._y - 50;
+
+    this.velocity = this.speed;
+    this.isJumping = false;
+
+    this.activeKeys = [];
+
+    this.addEventListeners.call(this);
+
+    this.setCanvasWidth.call(this);
+
+    this.scrollerCanv = document.getElementById('scroller');
+
+    this. renderer = new PIXI.Renderer({
+        view: this.scrollerCanv,
+        width: this._x,
+        height: this._y,
+        resolution: window.devicePixelRatio,
+        autoDensity: true,
+        backgroundColor: 0xAAAAAA,
+    });
+
+    this.ticker = new PIXI.Ticker();
+    this.loader = PIXI.Loader.shared;
+
+    this.loadAssets.call(this);
+
+    this.gameLoop.bind(this);
+
 }
 
-const scrollerCanv = document.getElementById('scroller');
-
-//assets paths
-const evePath = 'eve.png';
-const farBgPath = 'bg-far.png';
-const midBgPath = 'bg-mid.png';
-
-const defaultWidth = 512;
-const defaultHeight = 384;
-
-let _y = defaultHeight;
-let _x = defaultWidth;
-
-setCanvasWidth();
-
-function setCanvasWidth() {
-    if (window.innerWidth * 0.5 < defaultWidth) {
-        _x = window.innerWidth * 0.5;
-    }
+Main.prototype.loadAssets = function() {
+    this.loader.baseUrl = '../assets/images';
+    this.loader.add('eve', this.evePath)
+        .add('bgFar', this.farBgPath)
+        .add('bgMid', this.midBgPath)
+        .on('progress', this.handleLoadProgress.bind(this))
+        .on('load', this.handleLoadAsset.bind(this))
+        .on('error', this.handleLoadError.bind(this))
+        .load(this.handleLoadComplete.bind(this));
 }
 
+Main.prototype.handleLoadComplete = function() {
 
-const renderer = new PIXI.Renderer({
-    view: scrollerCanv,
-    width: _x,
-    height: _y,
-    resolution: window.devicePixelRatio,
-    autoDensity: true,
-    backgroundColor: 0xAAAAAA,
-});
-
-window.addEventListener('resize', resize);
-window.addEventListener('keydown', keysDown);
-window.addEventListener('keyup', keysUp);
-
-function resize() {
-    setCanvasWidth();
-    renderer.resize(_x, _y);
-}
-
-let activeKeys = [];
-
-function keysDown(e) {
-    activeKeys[e.keyCode] = true;
-}
-
-function keysUp(e) {
-    activeKeys[e.keyCode] = false;
-}
-
-const stage = new PIXI.Container();
-
-const speed = 5;
-
-// Eve initial setup
-let eve;
-const startEveX = 50;
-const startEveY = _y - 50;
-
-
-const ticker = new PIXI.Ticker();
-
-let loader = PIXI.Loader.shared;
-
-loader.baseUrl = '../assets/images';
-
-loader.add('eve', evePath)
-    .add('bgFar', farBgPath)
-    .add('bgMid', midBgPath)
-    .on('progress', handleLoadProgress)
-    .on('load', handleLoadAsset)
-    .on('error', handleLoadError)
-    .load(handleLoadComplete);
-
-let scroller;
-
-function handleLoadComplete() {
-
-    scroller = new Scroller(stage, loader.resources);
+    this.scroller = new Scroller(this.stage, this.loader.resources);
 
     // Eve
-    eve = new Player(stage, loader.resources);
+    this.eve = new Player(this.stage, this.loader.resources, this.startEveX, this.startEveY);
 
     // Render stage
-    renderer.render(stage);
+    this.renderer.render(this.stage);
 
     // Start gameLoop
-    ticker.add(gameLoop);
-    ticker.start();
+    this.ticker.add(this.gameLoop.bind(this));
+    this.ticker.start();
 }
 
-function handleLoadAsset(loader, resource) {
-    console.log('asset loaded: ' + resource.name);
-}
+Main.prototype.gameLoop = function() {
 
-function handleLoadProgress(loader, resource) {
-    console.log(loader.progress + ' %loaded');
-}
+    this.scroller.moveViewPortXBy(this.speed);
+    this.renderer.render(this.stage);
 
-function handleLoadError() {
-    console.error('loading error');
-}
-
-let velocity = speed;
-let isJumping = false;
-
-function gameLoop() {
-
-    scroller.moveViewPortXBy(speed);
-    renderer.render(stage);
-
-    if (!isJumping) {
-        if (activeKeys[32]) {
-            isJumping = true;
-            eve.y -= 5 * velocity;
-            velocity -= 0.5;
-            renderer.render(stage);
-            if (eve.y === startEveY) {
-                velocity = 5;
-                eve.y = startEveY;
-                isJumping = false
+    if (!this.isJumping) {
+        if (this.activeKeys[32]) {
+            this.isJumping = true;
+            this.eve.y -= 5 * this.velocity;
+            this.velocity -= 0.5;
+            this.renderer.render(this.stage);
+            if (this.eve.y === this.startEveY) {
+                this.velocity = 5;
+                this.eve.y = this.startEveY;
+                this.isJumping = false
             }
         }
     }
-    if (isJumping) {
-        eve.y -= 5 * velocity;
-        velocity -= 0.5;
-        renderer.render(stage);
-        if (eve.y === startEveY) {
-            velocity = 5;
-            eve.y = startEveY;
-            isJumping = false
+    if (this.isJumping) {
+        this.eve.y -= 5 * this.velocity;
+        this.velocity -= 0.5;
+        this.renderer.render(this.stage);
+        if (this.eve.y === this.startEveY) {
+            this.velocity = 5;
+            this.eve.y = this.startEveY;
+            this.isJumping = false
         }
     }
+}
+
+Main.prototype.setCanvasWidth = function() {
+    if (window.innerWidth * 0.5 < this.defaultWidth) {
+        this._x = window.innerWidth * 0.5;
+    }
+}
+
+Main.prototype.addEventListeners = function() {
+    window.addEventListener('resize', this.resize.bind(this));
+    window.addEventListener('keydown', this.keysDown.bind(this));
+    window.addEventListener('keyup', this.keysUp.bind(this));
+}
+
+Main.prototype.resize = function() {
+    this.setCanvasWidth();
+    this.renderer.resize(this._x, this._y);
+}
+
+Main.prototype.keysDown = function(e) {
+    this.activeKeys[e.keyCode] = true;
+}
+
+Main.prototype.keysUp = function(e) {
+    this.activeKeys[e.keyCode] = false;
+}
+
+Main.prototype.handleLoadAsset = function(loader, resource) {
+    console.log('asset loaded: ' + resource.name);
+}
+
+Main.prototype.handleLoadProgress = function(loader, resource) {
+    console.log(loader.progress + ' %loaded');
+}
+
+Main.prototype.handleLoadError = function() {
+    console.error('loading error');
 }
