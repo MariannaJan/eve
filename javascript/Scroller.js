@@ -8,6 +8,10 @@ function Scroller(stage, resources) {
     this.bgMid = new MidBg(resources.bgMid.texture);
     stage.addChild(this.bgMid);
 
+    this.terrain = new Terrain();
+    stage.addChild(this.terrain);
+
+    this.mapBuilder = new MapBuilder(this.terrain);
 
     this.viewPortX = 0;
 }
@@ -16,6 +20,7 @@ Scroller.prototype.setViewportX = function(viewPortX) {
     this.viewPortX = viewPortX;
     this.bgFar.setViewportX(viewPortX);
     this.bgMid.setViewportX(viewPortX);
+    this.terrain.setViewportX(viewPortX);
 }
 
 Scroller.prototype.getViewportX = function() {

@@ -11,7 +11,7 @@ function FarBg(texture, tick) {
     this.tilePosition.x = 0;
     this.tilePosition.y = 0;
 
-    this.tick = tick || 0.128;
+    this.tick = tick || 0.064;
 
     this.viewportX = 0;
 }

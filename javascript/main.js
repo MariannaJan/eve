@@ -6,7 +6,7 @@ function Main() {
     this.midBgPath = 'bg-mid.png';
     this.terrainConfPath = 'wall.json'
 
-    this.defaultWidth = 512;
+    this.defaultWidth = Terrain.VIEWPORT_WIDTH;
     this.defaultHeight = 384;
 
     this._y = this.defaultHeight;
@@ -14,7 +14,7 @@ function Main() {
 
     this.stage = new PIXI.Container();
 
-    this.speed = 5;
+    this.speed = Main.MIN_SCROLL_SPEED;
     this.startEveX = 50;
     this.startEveY = this._y - 50;
 
@@ -68,11 +68,6 @@ Main.prototype.handleLoadComplete = function() {
     // Eve
     this.eve = new Player(this.stage, this.loader.resources, this.startEveX, this.startEveY);
 
-
-    //terrain
-    // this.pool = new TerrainPool();
-    // this.slices = [];
-
     // Render stage
     this.renderer.render(this.stage);
 
@@ -84,6 +79,10 @@ Main.prototype.handleLoadComplete = function() {
 Main.prototype.gameLoop = function() {
 
     this.scroller.moveViewPortXBy(this.speed);
+    this.speed += Main.SCROLL_ACCELERATION;
+    if (this.speed > Main.MAX_SCROLL_SPEED) {
+        this.speed = Main.MAX_SCROLL_SPEED;
+    }
     this.renderer.render(this.stage);
 
     if (!this.isJumping) {
@@ -148,59 +147,6 @@ Main.prototype.handleLoadError = function() {
     console.error('loading error');
 };
 
-// Main.prototype.generateTestTerrainSpan = function() {
-
-//     this.terrainSlices = [];
-
-//     var lookupTable = [
-//         this.pool.borrowFrontEdge,  // 1st slice
-//         this.pool.borrowWindow,     // 2nd slice
-//         this.pool.borrowDecoration, // 3rd slice
-//         this.pool.borrowStep,       // 4th slice
-//         this.pool.borrowWindow,     // 5th slice
-//         this.pool.borrowBackEdge    // 6th slice
-//     ];
-
-//     var yPos = [
-//         128, // 1st slice
-//         128, // 2nd slice
-//         128, // 3rd slice
-//         192, // 4th slice
-//         192, // 5th slice
-//         192  // 6th slice
-//     ];
-
-//     for (var i =0; i < lookupTable.length; i++) {
-//         var func = lookupTable[i];
-
-//         var sprite = func.call(this.pool);
-
-//         sprite.x = 64 + (i * 64);
-//         sprite.y = yPos[i];
-
-//         this.terrainSlices.push(sprite);
-
-//         this.stage.addChild(sprite);
-//     };
-// };
-
-// Main.prototype.clearTestTerrainSpan = function() {
-//     var lookupTable = [
-//         this.pool.returnFrontEdge,  // 1st slice
-//         this.pool.returnWindow,     // 2nd slice
-//         this.pool.returnDecoration, // 3rd slice
-//         this.pool.returnStep,       // 4th slice
-//         this.pool.returnWindow,     // 5th slice
-//         this.pool.returnBackEdge    // 6th slice
-//     ];
-
-//     for (var i = 0; i < lookupTable.length; i++) {
-//         var func = lookupTable[i];
-//         var sprite = this.terrainSlices[i];
-
-//         this.stage.removeChild(sprite);
-//         func.call(this.pool, sprite);
-//     }
-
-//     this.terrainSlices = [];
-// };
+Main.MIN_SCROLL_SPEED = 5;
+Main.MAX_SCROLL_SPEED = 15;
+Main.SCROLL_ACCELERATION = 0.005;
