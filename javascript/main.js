@@ -48,7 +48,7 @@ function Main() {
 };
 
 Main.prototype.loadAssets = function() {
-    this.loader.baseUrl = '../assets/images';
+    this.loader.baseUrl = 'assets/images';
     this.loader.add('eve', this.evePath)
         .add('bgFar', this.farBgPath)
         .add('bgMid', this.midBgPath)
