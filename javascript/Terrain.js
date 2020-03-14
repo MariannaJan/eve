@@ -22,7 +22,6 @@ Terrain.prototype.setViewportX = function(viewportX) {
 };
 
 Terrain.prototype.createLookupTables = function() {
-    console.log('lookup');
     this.borrowTerrainSpriteLookup = [];
     this.borrowTerrainSpriteLookup[TerrainType.FRONT] = this.pool.borrowFrontEdge;
     this.borrowTerrainSpriteLookup[TerrainType.BACK] = this.pool.borrowBackEdge;
