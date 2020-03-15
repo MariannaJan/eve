@@ -1,5 +1,5 @@
 function FarBg(texture, tick) {
-    PIXI.extras.TilingSprite.call(
+    PIXI.TilingSprite.call(
         this,
         texture,
         texture.baseTexture.width,
@@ -16,7 +16,7 @@ function FarBg(texture, tick) {
     this.viewportX = 0;
 }
 
-FarBg.prototype = Object.create(PIXI.extras.TilingSprite.prototype);
+FarBg.prototype = Object.create(PIXI.TilingSprite.prototype);
 
 FarBg.prototype.setViewportX = function(newViewportX) {
     var distanceTravelled = newViewportX - this.viewportX;

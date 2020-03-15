@@ -48,28 +48,28 @@ TerrainPool.prototype.returnStep = function(sprite) {
 
 TerrainPool.prototype.addWindowSprites = function(amount, frameId) {
     for (var i = 0; i < amount; i++) {
-        var sprite = PIXI.Sprite.fromFrame(frameId);
+        var sprite = PIXI.Sprite.from(frameId);
         this.windows.push(sprite);
     }
 };
 
 TerrainPool.prototype.addDecorationSprites = function(amount, frameId) {
     for (var i = 0; i < amount; i++) {
-        var sprite = new PIXI.Sprite(PIXI.Texture.fromFrame(frameId));
+        var sprite = new PIXI.Sprite(PIXI.Texture.from(frameId));
         this.decorations.push(sprite);
     }
 };
 
 TerrainPool.prototype.addFrontEdgeSprites = function(amount, frameId) {
     for (var i = 0; i < amount; i++) {
-        var sprite = new PIXI.Sprite(PIXI.Texture.fromFrame(frameId));
+        var sprite = new PIXI.Sprite(PIXI.Texture.from(frameId));
         this.frontEdges.push(sprite);
     }
 };
 
 TerrainPool.prototype.addBackEdgeSprites = function(amount, frameId) {
     for (var i = 0; i < amount; i++) {
-        var sprite = new PIXI.Sprite(PIXI.Texture.fromFrame(frameId));
+        var sprite = new PIXI.Sprite(PIXI.Texture.from(frameId));
         sprite.anchor.x = 1;
         sprite.scale.x = -1;
         this.backEdges.push(sprite);
@@ -78,7 +78,7 @@ TerrainPool.prototype.addBackEdgeSprites = function(amount, frameId) {
 
 TerrainPool.prototype.addStepSprites = function(amount, frameId) {
     for (var i = 0; i < amount; i++) {
-        var sprite = new PIXI.Sprite(PIXI.Texture.fromFrame(frameId));
+        var sprite = new PIXI.Sprite(PIXI.Texture.from(frameId));
         sprite.anchor.y = 0.25;
         this.steps.push(sprite);
     }

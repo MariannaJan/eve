@@ -1,5 +1,5 @@
 function MidBg(texture, tick) {
-    PIXI.extras.TilingSprite.call(
+    PIXI.TilingSprite.call(
         this,
         texture,
         texture.baseTexture.width,
@@ -15,7 +15,7 @@ function MidBg(texture, tick) {
     this.viewportX = 0;
 }
 
-MidBg.prototype = Object.create(PIXI.extras.TilingSprite.prototype);
+MidBg.prototype = Object.create(PIXI.TilingSprite.prototype);
 
 MidBg.prototype.setViewportX = function(newViewportX) {
     var distanceTravelled = newViewportX - this.viewportX;
