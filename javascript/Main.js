@@ -2,8 +2,8 @@ function Main() {
 
     //assets paths
     this.evePath = 'eve.png';
-    this.farBgPath = 'bg-far4.png';
-    this.midBgPath = 'bg-mid4.png';
+    this.farBgPath = 'bg-far.png';
+    this.midBgPath = 'bg-mid.png';
     this.terrainConfPath = 'wall.json'
 
     this.defaultWidth = Terrain.VIEWPORT_WIDTH;
